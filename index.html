@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>我の名はっスパイダーマッ！</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
+  <script>
+    function init() {
+      var map = L.map('mapcontainer', { zoomControl: false });
+      var mpoint = [37.79531365, 140.91408426];
+      map.setView(mpoint, 15);
+      L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+        attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+      }).addTo(map);
+      //ポップアップする文字（HTML可、ここでは画像を表示）
+      var sucontents = "相馬高校です<br><img src='su.jpg' width='500' height='375'>"
+      //ポップアップオブジェクトを作成
+      var popup1 = L.popup({ maxWidth: 550 }).setContent(sucontents);
+      var popup2 = L.popup().setContent("安積第三小学校です");
+      //マーカーにポップアップを紐付けする。同時にbindTooltipでツールチップも追加
+      L.marker(mpoint, { draggable: true }).bindPopup(popup1).bindTooltip("相馬高校").addTo(map);
+      L.marker([37.35420118, 140.34784106]).bindPopup(popup2).bindTooltip("安積第三小学校").addTo(map);
+    }
+  </script>
+</head>
+<body onload="init()">
+  <div id="mapcontainer" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>
+</body>
+</html>
