@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ストレス解消法アプリ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    input, button {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>ストレス解消法アプリ</h1>
+  <div id="age-input">
+    <h2>はじめに年齢を入力してください</h2>
+    <input type="number" id="age" placeholder="例: 25">
+    <button onclick="setAge()">年齢を登録</button>
+  </div>
+  <div id="suggestions" style="display: none;">
+    <h2>おすすめのストレス解消法</h2>
+    <ul id="methods"></ul>
+    <button onclick="resetAge()">年齢を変更</button>
+  </div>
+
+  <script>
+    const stressReliefData = [
+      { ageRange: "10-14", methods: ["短時間の瞑想", "好きな音楽を聴く", "ペットと遊ぶ", "自然の中で散歩"] },
+      { ageRange: "15-19", methods: ["スポーツで体を動かす", "友達と話す", "趣味に没頭する"] },
+      { ageRange: "20-24", methods: ["深呼吸エクササイズ", "ジムに通う", "旅行の計画を立てる"] },
+      { ageRange: "25-29", methods: ["本を読む", "軽いストレッチ", "音楽や映画を楽しむ"] },
+      { ageRange: "30-39", methods: ["ヨガ", "趣味を楽しむ", "仕事から離れて休息を取る"] },
+      { ageRange: "40-49", methods: ["家族と過ごす", "庭仕事をする", "料理に挑戦する"] },
+      { ageRange: "50-59", methods: ["ウォーキング", "軽いジョギング", "地域活動に参加"] },
+      { ageRange: "60+", methods: ["瞑想", "散歩", "クラフトや手芸を楽しむ"] }
+    ];
+
+    function getSuggestions(userAge) {
+      const suggestion = stressReliefData.find(({ ageRange }) => {
+        const [min, max] = ageRange.split("-").map(Number);
+        return max ? userAge >= min && userAge <= max : userAge >= min;
+      });
+      return suggestion ? suggestion.methods : ["該当するストレス解消法が見つかりません"];
+    }
+
+    function setAge() {
+      const age = parseInt(document.getElementById("age").value, 10);
+      if (!isNaN(age) && age > 0) {
+        localStorage.setItem("userAge", age);
+        displaySuggestions(age);
+      } else {
+        alert("有効な年齢を入力してください！");
+      }
+    }
+
+    function displaySuggestions(age) {
+      const methods = getSuggestions(age);
+      const methodsList = document.getElementById("methods");
+      methodsList.innerHTML = "";
+      methods.forEach(method => {
+        const li = document.createElement("li");
+        li.textContent = method;
+        methodsList.appendChild(li);
+      });
+
+      document.getElementById("age-input").style.display = "none";
+      document.getElementById("suggestions").style.display = "block";
+    }
+
+    function resetAge() {
+      localStorage.removeItem("userAge");
+      document.getElementById("age-input").style.display = "block";
+      document.getElementById("suggestions").style.display = "none";
+    }
+
+    window.onload = () => {
+      const savedAge = localStorage.getItem("userAge");
+      if (savedAge) {
+        displaySuggestions(parseInt(savedAge, 10));
+      }
+    };
+  </script>
+</body>
+</html>
